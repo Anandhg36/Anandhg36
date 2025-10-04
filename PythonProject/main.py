@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timedelta
 from typing import List
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.responses import FileResponse
 from pathvalidate import sanitize_filename
 from config import (UPLOAD_FOLDER, ALLOWED_EXTENSIONS, MAX_FILE_SIZE, TOKEN_EXPIRY_MINUTES, fernet)
@@ -9,13 +9,14 @@ from config import (UPLOAD_FOLDER, ALLOWED_EXTENSIONS, MAX_FILE_SIZE, TOKEN_EXPI
 app = FastAPI()
 
 @app.get("/image-link/{filename}")
-def get_image_link(filename: str):
+def get_image_link(filename: str, request: Request):
     sanitized_filename = sanitizeFilename(filename)
     filepath = os.path.join(UPLOAD_FOLDER, sanitized_filename)
     if not os.path.isfile(filepath):
         raise HTTPException(status_code=404, detail="File not found")
     encrypted_filename = encryptFilenameWithTimestamp(sanitized_filename)
-    return {"link": f"{encrypted_filename}"}
+    full_link = f"{request.url.scheme}://{request.url.hostname}:{request.url.port}/access_image/{encrypted_filename}"
+    return {"link": full_link}
 
 
 @app.get("/access_image/{token}")
