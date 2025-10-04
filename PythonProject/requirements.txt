@@ -1,0 +1,6 @@
+fastapi~=0.118.0
+uvicorn
+cryptography~=46.0.2
+python-dotenv~=1.1.1
+python-multipart
+pathvalidate~=3.3.1
