@@ -26,6 +26,9 @@ This FastAPI project allows uploading images, generating secure time-limited acc
 ## 🔐 Encryption Method
 - Uses *Fernet encryption* from the cryptography library.
 - Each token stores the filename and expiration time, encrypted with a symmetric key from .env.
-
+- Note:
+The application uses a Fernet encryption key to securely encrypt and decrypt image filenames and access tokens.
+For development and testing, this key is stored in the .env file under the variable name FERNET_KEY.
+This allows the FastAPI app to load the key easily during local testing. However,this should not be exposed in a production environment
 ## 🧰 Environment Variable
 Create a .env file:
